@@ -276,6 +276,7 @@ let rec evalExp (e : UntypedExp, vtab : VarTable, ftab : FunTable) : Value =
               else let msg = sprintf "Error: In iota call, size is negative: %i" size
                    raise (MyError(msg, pos))
           | _ -> raise (MyError("Iota argument is not a number: "+ppVal 0 sz, pos))
+
   | Map (farg, arrexp, _, _, pos) ->
         let arr  = evalExp(arrexp, vtab, ftab)
         let farg_ret_type = rtpFunArg farg ftab pos
@@ -303,8 +304,21 @@ let rec evalExp (e : UntypedExp, vtab : VarTable, ftab : FunTable) : Value =
          the value of `a`; otherwise raise an error (containing
          a meaningful message).
   *)
-  | Replicate (_, _, _, _) ->
-        failwith "Unimplemented interpretation of replicate"
+  | Replicate (n, e, tp, pos) ->
+        let sz = evalExp (n, vtab, ftab)
+        let e_ = evalExp (e, vtab, ftab)
+        match sz with
+          | IntVal size ->
+              if size >= 0
+                then ArrayVal (List.replicate size e_, tp)
+              else let msg = sprintf "Error: In Replicate  call, size is negative: %i" size
+                   raise (MyError(msg, pos))
+              //else raise (MyError("Error: In Replicate call, size is negative:", pos))
+          | _ -> raise (MyError("Replicate first argument is not a number: "+ppVal 0 sz, pos))
+
+
+
+
 
   (* TODO project task 2: `filter(p, arr)`
        pattern match the implementation of map:
@@ -323,7 +337,7 @@ let rec evalExp (e : UntypedExp, vtab : VarTable, ftab : FunTable) : Value =
                         let b_val = evalFunArg (farg, vtab, ftab, pos, [x])
                         match b_val with
                             | BoolVal b -> b
-                            | _ -> raise (MyError("Funtional argument of filter produced a
+                            | _ -> raise (MyError("Functional argument of filter produced a
                                     non-boolean value: "+ppVal 0 b_val, pos))
                             ) lst
                 ArrayVal(res_lst, tp)
@@ -335,8 +349,31 @@ let rec evalExp (e : UntypedExp, vtab : VarTable, ftab : FunTable) : Value =
      Implementation similar to reduce, except that it produces an array
      of the same type and length to the input array `arr`.
   *)
-  | Scan (_, _, _, _, _) ->
-        failwith "Unimplemented interpretation of scan"
+  | Scan (farg, e, arr_exp, _, pos) ->
+        let e_val =
+          match evalExp(e, vtab, ftab) with
+            | IntVal  n -> n
+            | BoolVal b -> b
+            | CharVal c -> c
+            | _ -> raise (MyError("Scan second argument is not a int, bool or char: "+ppVal 0 e, pos))
+        let arr_val = evalExp(arr_exp, vtab, ftab)
+        match arr_val with
+          | ArrayVal(lst, tp) ->
+              let new_lst =
+                List.scan (fun x ->
+                  let n_val = evalFunArg (farg, vtab, ftab, pos, [x])
+                  match n_val with
+                    | IntVal  n -> n
+                    | BoolVal b -> b
+                    | CharVal c -> c
+                    | _         -> raise (MyError("Functional argument of Scan do not produce the
+                                  same type as the input type : " + ppVal 0 n_val , pos))
+                  ) e_val lst
+               ArrayVal(new_lst,tp)
+               |_ -> raise (MyError("Third argument of Scan does not evaluate to an
+               array value: "+ppVal 0 arr_val, pos))
+
+
 
   | Read (t,p) ->
         let str = Console.ReadLine()

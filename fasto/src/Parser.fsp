@@ -43,7 +43,7 @@ let parse_error_rich =
 %token <(int*int)> IF THEN ELSE LET IN EOF
 %token <(int*int)> INT CHAR BOOL
 %token <(int*int)> PLUS MINUS LESS TIMES DIVIDE NEGATE
-%token <(int*int)> DEQ LTH EQ OP NOT AND OR MAP REDUCE FILTER IOTA ARROW
+%token <(int*int)> DEQ LTH EQ OP NOT AND OR MAP REDUCE FILTER SCAN REPLICATE IOTA ARROW
 %token <(int*int)> FUN FN COMMA SEMICOLON READ WRITE
 %token <(int*int)> LPAR RPAR LBRACKET RBRACKET LCURLY RCURLY
 
@@ -139,13 +139,19 @@ Exp : NUM            { Constant (IntVal (fst $1), snd $1)  }
                      { Map ($3, $5, (), (), $1) }
     | REDUCE LPAR FunArg COMMA Exp COMMA Exp RPAR
                      { Reduce ($3, $5, $7, (), $1) }
+
     | REDUCE LPAR OP BinOp COMMA Exp COMMA Exp RPAR
                      { Reduce ($4, $6, $8, (), $1) }
-    | FILTER LPAR FunArg COMMA Exp RPAR { Filter($3, $5, (), $1)}
+    | FILTER LPAR FunArg COMMA Exp RPAR
+                     { Filter($3, $5, (), $1)}
+    | SCAN LPAR FunArg COMMA Exp COMMA Exp RPAR
+                     { Scan ($3, $5, $7, (), $1)}
+    | REPLICATE LPAR Exp COMMA Exp RPAR
+                     { Replicate ($3, $5, (), $1)}
 
     | LPAR Exp RPAR  { $2 }
     // TODO: task 1(b): replace this with a more general production
-    //| LET ID EQ Exp SEMICOLON 
+    //| LET ID EQ Exp SEMICOLON
     | LET ID EQ Exp IN Exp %prec letprec
                      { Let (Dec (fst $2, $4, $3), $6, $1) }
     | ID LBRACKET Exp RBRACKET

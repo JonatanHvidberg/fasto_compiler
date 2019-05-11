@@ -286,8 +286,14 @@ and checkExp  (ftab : FunTable)
         - assuming `a` is of type `t` the result type
           of replicate is `[t]`
     *)
-    | Replicate (_, _, _, pos) ->
-        failwith "Unimplemented type check of replicate"
+    | Replicate (n, e, _, pos) ->
+        let (sz_tp, dec_sz) = checkExp ftab vtab n
+        let (e_tp, dec_e)   = checkExp ftab vtab e
+        if sz_tp = Int
+        then (Array(e_tp), Replicate (dec_sz, dec_e, e_tp, pos))
+        else raise (MyError( "Replicate: expression input not an Int" +
+                        ppType sz_tp , pos))
+
 
     (* TODO project task 2: Hint for `filter(f, arr)`
         Look into the type-checking lecture slides for the type rule of `map`
@@ -320,8 +326,26 @@ and checkExp  (ftab : FunTable)
               scan's return type is the same as the type of `arr`,
               while reduce's return type is that of an element of `arr`).
     *)
-    | Scan (_, _, _, _, _) ->
-        failwith "Unimplemented type check of scan"
+    | Scan (farg, e, arr_exp, _, pos) ->
+        let (arr_tp, dec_arr_exp) = checkExp ftab vtab arr_exp
+        let (e_tp, dec_e)   = checkExp ftab vtab e
+        let el_tp =
+            match arr_tp with
+                | Array(ae_tp) -> ae_tp
+                | _ -> raise (MyError( "Scan: expression input not an array" +
+                                ppType arr_tp , pos))
+        if (el_tp=e_tp) then
+          let (rea_tp_fn, inp_tp_fn, dec_farg) =
+              match checkFunArg ftab vtab pos farg with
+                  | (farg_dec, res_tp, [inp_tp]) -> (res_tp, inp_tp, farg_dec)
+                  | _ -> raise (MyError("Scan: function argument does not take
+                                          exactly on param ", pos))
+          if (rea_tp_fn = e_tp) && (el_tp = inp_tp_fn)
+          then (arr_tp , Scan(dec_farg, dec_e, dec_arr_exp, el_tp, pos))
+          else raise (MyError("Scan: result funarg elem type does not
+          matches input array elemnt type", pos))
+        else (MyError( "Scan: expression second argument" +
+                        ppType arr_tp + "and third " + ppType e_tp + "does not have the same type" , pos))
 
 and checkFunArg  (ftab : FunTable)
                  (vtab : VarTable)

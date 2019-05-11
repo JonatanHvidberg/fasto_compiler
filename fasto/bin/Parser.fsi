@@ -23,6 +23,8 @@ type token =
   | MAP of ((int*int))
   | REDUCE of ((int*int))
   | FILTER of ((int*int))
+  | SCAN of ((int*int))
+  | REPLICATE of ((int*int))
   | IOTA of ((int*int))
   | ARROW of ((int*int))
   | PLUS of ((int*int))
@@ -69,6 +71,8 @@ type tokenId =
     | TOKEN_MAP
     | TOKEN_REDUCE
     | TOKEN_FILTER
+    | TOKEN_SCAN
+    | TOKEN_REPLICATE
     | TOKEN_IOTA
     | TOKEN_ARROW
     | TOKEN_PLUS
