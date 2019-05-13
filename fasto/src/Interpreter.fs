@@ -254,6 +254,7 @@ let rec evalExp (e : UntypedExp, vtab : VarTable, ftab : FunTable) : Value =
         let res   = evalExp(e, vtab, ftab)
         let nvtab = SymTab.bind id res vtab
         evalExp(exp, nvtab, ftab)
+
   | Index(id, e, tp, pos) ->
         let indv= evalExp(e, vtab, ftab)
         let arr = SymTab.lookup id vtab
@@ -304,9 +305,17 @@ let rec evalExp (e : UntypedExp, vtab : VarTable, ftab : FunTable) : Value =
          the value of `a`; otherwise raise an error (containing
          a meaningful message).
   *)
-  | Replicate (n, e, tp, pos) ->
+  | Replicate (n, e, _, pos) ->
         let sz = evalExp (n, vtab, ftab)
         let e_ = evalExp (e, vtab, ftab)
+
+        let tp =
+          match e_ with
+            | IntVal  n -> Int
+            | BoolVal b -> Bool
+            | CharVal c -> Char
+            | _ -> raise (MyError("Replicate second argument is not a int, bool or char: "+ppVal 0 e_, pos))
+
         match sz with
           | IntVal size ->
               if size >= 0
@@ -350,27 +359,34 @@ let rec evalExp (e : UntypedExp, vtab : VarTable, ftab : FunTable) : Value =
      of the same type and length to the input array `arr`.
   *)
   | Scan (farg, e, arr_exp, _, pos) ->
-        let e_val =
-          match evalExp(e, vtab, ftab) with
-            | IntVal  n -> n
-            | BoolVal b -> b
-            | CharVal c -> c
-            | _ -> raise (MyError("Scan second argument is not a int, bool or char: "+ppVal 0 e, pos))
-        let arr_val = evalExp(arr_exp, vtab, ftab)
-        match arr_val with
-          | ArrayVal(lst, tp) ->
-              let new_lst =
-                List.scan (fun x ->
-                  let n_val = evalFunArg (farg, vtab, ftab, pos, [x])
-                  match n_val with
-                    | IntVal  n -> n
-                    | BoolVal b -> b
-                    | CharVal c -> c
-                    | _         -> raise (MyError("Functional argument of Scan do not produce the
+  (*
+    let e_val =
+      match evalExp(e, vtab, ftab) with
+        | IntVal  n -> n
+        | BoolVal b -> b
+        | CharVal c -> c
+        | _ -> raise (MyError("Scan second argument is not a int, bool or char: "+ppVal 0 e, pos))
+        *)
+    let e_val = evalExp(e, vtab, ftab)
+    let arr_val = evalExp(arr_exp, vtab, ftab)
+    match arr_val with
+      | ArrayVal(lst, tp) ->
+        let new_lst =
+          List.scan (fun x -> (evalFunArg (farg, vtab, ftab, pos, [x]))) e_val lst
+            (*
+            let n_val = evalFunArg (farg, vtab, ftab, pos, [x])
+
+            match n_val with
+              | IntVal  n -> n
+              | BoolVal b -> b
+              | CharVal c -> c
+              | _         -> raise (MyError("Functional argument of Scan do not produce the
                                   same type as the input type : " + ppVal 0 n_val , pos))
-                  ) e_val lst
-               ArrayVal(new_lst,tp)
-               |_ -> raise (MyError("Third argument of Scan does not evaluate to an
+
+                  ) tp lst
+                  *)
+        ArrayVal(new_lst,tp)
+      |_ -> raise (MyError("Third argument of Scan does not evaluate to an
                array value: "+ppVal 0 arr_val, pos))
 
 
