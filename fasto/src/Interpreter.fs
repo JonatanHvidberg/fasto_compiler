@@ -311,9 +311,10 @@ let rec evalExp (e : UntypedExp, vtab : VarTable, ftab : FunTable) : Value =
 
         let tp =
           match e_ with
-            | IntVal  n -> Int
-            | BoolVal b -> Bool
-            | CharVal c -> Char
+            | IntVal  n       -> Int
+            | BoolVal b       -> Bool
+            | CharVal c       -> Char
+            | ArrayVal(a, tp) -> Array (tp)
             | _ -> raise (MyError("Replicate second argument is not a int, bool or char: "+ppVal 0 e_, pos))
 
         match sz with
@@ -372,8 +373,8 @@ let rec evalExp (e : UntypedExp, vtab : VarTable, ftab : FunTable) : Value =
     match arr_val with
       | ArrayVal(lst, tp) ->
         let new_lst =
-          List.scan (fun x -> (evalFunArg (farg, vtab, ftab, pos, [x]))) e_val lst
-            (*
+          List.scan (fun a x ->  evalFunArg (farg, vtab, ftab, pos, [a; x])) e_val lst
+          (*
             let n_val = evalFunArg (farg, vtab, ftab, pos, [x])
 
             match n_val with
@@ -383,8 +384,8 @@ let rec evalExp (e : UntypedExp, vtab : VarTable, ftab : FunTable) : Value =
               | _         -> raise (MyError("Functional argument of Scan do not produce the
                                   same type as the input type : " + ppVal 0 n_val , pos))
 
-                  ) tp lst
-                  *)
+                  ) e_val lst *)
+
         ArrayVal(new_lst,tp)
       |_ -> raise (MyError("Third argument of Scan does not evaluate to an
                array value: "+ppVal 0 arr_val, pos))

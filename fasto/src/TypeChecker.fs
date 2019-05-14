@@ -344,7 +344,7 @@ and checkExp  (ftab : FunTable)
           then (arr_tp , Scan(dec_farg, dec_e, dec_arr_exp, el_tp, pos))
           else raise (MyError("Scan: result funarg elem type does not
           matches input array elemnt type", pos))
-        else (MyError( "Scan: expression second argument" +
+        else raise (MyError( "Scan: expression second argument" +
                         ppType arr_tp + "and third " + ppType e_tp + "does not have the same type" , pos))
 
 and checkFunArg  (ftab : FunTable)
