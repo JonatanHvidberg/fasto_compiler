@@ -172,9 +172,10 @@ let rec compileExp  (e      : TypedExp)
       else
         [ Mips.LUI (place, makeConst (n / 65536))
         ; Mips.ORI (place, place, makeConst (n % 65536)) ]
-  | Constant (BoolVal _, _) ->
+  | Constant (BoolVal b, pos) ->
+      if b then Mips.LI (place, string "1")
+      else Mips.LI (place, string "0")
       (* TODO project task 1: represent `true`/`false` values as `1`/`0` *)
-      failwith "Unimplemented code generation of boolean constants"
   | Constant (CharVal c, pos) -> [ Mips.LI (place, makeConst (int c)) ]
 
   (* Create/return a label here, collect all string literals of the program
@@ -402,10 +403,10 @@ let rec compileExp  (e      : TypedExp)
         Look in `AbSyn.fs` for the expression constructors of `And` and `Or`.
         The implementation of `And` and `Or` is more complicated than `Plus`
         because you need to ensure the short-circuit semantics, e.g.,
-        in `e1 || e2` if the execution of `e1` will evaluate to `true` then 
-        the code of `e2` must not be executed. Similar for `And` (&&). 
+        in `e1 || e2` if the execution of `e1` will evaluate to `true` then
+        the code of `e2` must not be executed. Similar for `And` (&&).
   *)
-  | And (_, _, _) ->      
+  | And (_, _, _) ->
       failwith "Unimplemented code generation of &&"
 
   | Or (_, _, _) ->
@@ -593,13 +594,13 @@ let rec compileExp  (e      : TypedExp)
          ; Mips.LABEL loop_end
          ]
 
-  (* TODO project task 2: 
+  (* TODO project task 2:
         `replicate(n, a)`
         `filter (f, arr)`
         `scan(f, ne, arr)`
      Look in `AbSyn.fs` for the shape of expression constructors
         `Replicate`, `Filter`, `Scan`.
-     General Hint: write down on a piece of paper the C-like pseudocode 
+     General Hint: write down on a piece of paper the C-like pseudocode
         for implementing them, then translate that to Mips pseudocode.
      To allocate heap space for an array you may use `dynalloc` defined
         above. For example, if `sz_reg` is a register containing an integer `n`,
@@ -610,13 +611,13 @@ let rec compileExp  (e      : TypedExp)
         will place in register `arr_reg` the start address of the new array.
         Since you need to allocate space for the result arrays of `Replicate`,
         `Map` and `Scan`, then `arr_reg` should probably be `place` ...
-     
-     `replicate(n,a)`: You should allocate a new (result) array, and execute a 
+
+     `replicate(n,a)`: You should allocate a new (result) array, and execute a
         loop of count `n`, in which you store the value hold into the register
-        corresponding to `a` into each memory location corresponding to an 
+        corresponding to `a` into each memory location corresponding to an
         element of the result array.
         If `n` is less than `0` then remember to terminate the program with
-        an error -- see implementation of `iota`.        
+        an error -- see implementation of `iota`.
   *)
   | Replicate (_, _, _, _) ->
       failwith "Unimplemented code generation of replicate"
@@ -629,22 +630,22 @@ let rec compileExp  (e      : TypedExp)
           - increment a counter (initialized before the loop)
      (d) It is useful to maintain two array iterators: one for the input array `arr`
          and one for the result array. (The latter increases slower because
-         some of the elements of the input array are skipped because they fail 
+         some of the elements of the input array are skipped because they fail
          under the predicate).
      (e) The last step (after the loop writing the elments of the result array)
          is to update the logical size of the result array to the value of the
-         counter computed in step (c). You do this of course with a 
+         counter computed in step (c). You do this of course with a
          `Mips.SW(counter_reg, place, "0")` instruction.
   *)
   | Filter (_, _, _, _) ->
       failwith "Unimplemented code generation of map"
 
   (* TODO project task 2: see also the comment to replicate.
-     `scan(f, ne, arr)`: you can inspire yourself from the implementation of 
+     `scan(f, ne, arr)`: you can inspire yourself from the implementation of
         `reduce`, but in the case of `scan` you will need to also maintain
         an iterator through the result array, and write the accumulator in
         the current location of the result iterator at every iteration of
-        the loop. 
+        the loop.
   *)
   | Scan (_, _, _, _, _) ->
       failwith "Unimplemented code generation of scan"
@@ -890,4 +891,3 @@ let compile (funs : TypedProg) : Mips.Instruction list =
         Mips.LABEL "_heap_";
         Mips.SPACE "100000"]
   mips_prog
-
