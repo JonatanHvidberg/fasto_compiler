@@ -1,0 +1,20 @@
+To-Do-List
+
+1. Lexer TASK 1 		- DONE!
+2. Lexer TASK 2 		- DONE! 
+3. Lexer TASK 4 		- MISSING! 
+
+1. Parser TASK 1 		- MISSING LET! 
+2. Parser TASK 2 		- DONE!
+3. Parser TASK 4		- DONE!
+
+1. TypeChecker			- DONE!
+2. TypeChecker			- DONE! 
+
+1. Interpreter TASK 1		- DONE!
+2. Interpreter TASK 2		- DONE!
+
+1. CodeGen TASK1 		- MISSING!
+2. GodeGen TASK2 		- MISSING! 
+
+3. DeadBindingRemoval TASK3	- MISSING!
