@@ -58,6 +58,8 @@ let SP = "29"
 (* Register for heap pointer *)
 let HP = "28"
 
+(* Dette er en test fra Omar *)
+
 (* Suggested register division *)
 let minReg = 2       (* lowest usable register *)
 let maxCaller = 15   (* highest caller-saves register *)
