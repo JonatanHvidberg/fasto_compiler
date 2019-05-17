@@ -174,8 +174,8 @@ let rec compileExp  (e      : TypedExp)
         [ Mips.LUI (place, makeConst (n / 65536))
         ; Mips.ORI (place, place, makeConst (n % 65536)) ]
   | Constant (BoolVal b, pos) ->
-      if b then Mips.LI (place, string "1")
-      else Mips.LI (place, string "0")
+      if b then [Mips.LI (place, "1")]
+      else [Mips.LI (place, "0")]
       (* TODO project task 1: represent `true`/`false` values as `1`/`0` *)
   | Constant (CharVal c, pos) -> [ Mips.LI (place, makeConst (int c)) ]
 
@@ -654,7 +654,7 @@ let rec compileExp  (e      : TypedExp)
         If `n` is less than `0` then remember to terminate the program with
         an error -- see implementation of `iota`.
   *)
-  | Replicate (n, e, tp, pos) ->
+  | Replicate (n, e, tp, (line,_)) ->
     let size_reg = newName "size_reg"
     let val_rep = newName "val"
     let e_code = compileExp e vtable val_rep
@@ -662,9 +662,9 @@ let rec compileExp  (e      : TypedExp)
     let safe_lab = newName "safe_lab"
 
     let checksize = [ Mips.ADDI (size_reg,size_reg,"-1")
-                    ; Mips.BGEZ (size_reg, safe_lep)
+                    ; Mips.BGEZ (size_reg, safe_lab)
                     ; Mips.LI ("5", makeConst line)
-                    ; Mips.J "_IllegalArrSizeError_"]
+                    ; Mips.J ("_IllegalArrSizeError_")
                     ; Mips.LABEL (safe_lab)
                     ; Mips.ADDI (size_reg,size_reg,"1")]
     let arr_reg = newName "arr_reg"
@@ -674,7 +674,7 @@ let rec compileExp  (e      : TypedExp)
     let loop_end = newName "loop_end"
     let tmp_reg = newName "tmp_reg"
 
-    let loop_header = [ Mips.MOVE (i_reg,"0")
+    let loop_header = [ Mips.LI (i_reg,"0")
                       ; Mips.LABEL (loop_beg)
                       ; Mips.SUB (tmp_reg, i_reg , size_reg)
                       ; Mips.BGEZ (tmp_reg, loop_end)]
@@ -701,7 +701,7 @@ let rec compileExp  (e      : TypedExp)
     @ loop_header
     @ loop_replicate
     @ loop_footer
-    
+
   (* TODO project task 2: see also the comment to replicate.
      (a) `filter(f, arr)`:  has some similarity with the implementation of map.
      (b) Use `applyFunArg` to call `f(a)` in a loop, for every element `a` of `arr`.
