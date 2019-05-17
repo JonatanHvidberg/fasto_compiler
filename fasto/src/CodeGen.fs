@@ -253,14 +253,13 @@ let rec compileExp  (e      : TypedExp)
       let code2 = compileExp e2 vtable t2
       code1 @ code2 @ [Mips.MUL (place,t1,t2)]
 
-      | Divide (e1, e2, pos) ->
-            let t1 = newName "divide_L"
-            let t2 = newName "divide_R"
-            let zeroLabel = newName "divide_0"
-            let code1 = compileExp e1 vtable t1
-            let code2 = compileExp e2 vtable t2
-
-            code1 @ code2 @  [Mips.DIV (place,t1,t2)]
+  | Divide (e1, e2, pos) ->
+      let t1 = newName "divide_L"
+      let t2 = newName "divide_R"
+      let zeroLabel = newName "divide_0"
+      let code1 = compileExp e1 vtable t1
+      let code2 = compileExp e2 vtable t2
+      code1 @ code2 @  [Mips.DIV (place,t1,t2)]
             //code1 @ code2 @ [Mips.BEQ (t2,"0",zeroLabel)]  @ [Mips.DIV (place,t1,t2)] @
 
   | Not (e, pos) ->
@@ -277,8 +276,11 @@ let rec compileExp  (e      : TypedExp)
       ; Mips.LABEL trueLabel]
       //Mips.LI (place, string "1")
 
-  | Negate (_, _) ->
-      failwith "Unimplemented code generation of negate"
+  | Negate (e, pos) ->
+      let t = newName "neg"
+      let code = compileExp e vtable t
+
+      code @ [Mips.SUB (place, "0", t)]
 
   | Let (dec, e1, pos) ->
       let (code1, vtable1) = compileDec dec vtable
