@@ -113,7 +113,7 @@ Exp : NUM            { Constant (IntVal (fst $1), snd $1)  }
     | STRINGLIT      { StringLit $1 }
     | LCURLY Exps RCURLY
                      { ArrayLit ($2, (), $1) }
-    | Exp PLUS  Exp  { Plus ($1, $3, $2) }
+    | Exp PLUS Exp   { Plus ($1, $3, $2) }
     | Exp MINUS Exp  { Minus($1, $3, $2) }
     | Exp TIMES Exp  { Times($1, $3, $2) }
     | Exp DIVIDE Exp { Divide($1, $3, $2) }
@@ -151,8 +151,8 @@ Exp : NUM            { Constant (IntVal (fst $1), snd $1)  }
 
     | LPAR Exp RPAR  { $2 }
     // TODO: task 1(b): replace this with a more general production
-    | SEMICOLON ID EQ Exp
-                     {(Dec (fst $2, $4, $3)}
+    // | SEMICOLON ID EQ Exp
+    //                 {(Dec (fst $2, $4, $3)}
     | LET ID EQ Exp IN Exp %prec letprec
                      { Let (Dec (fst $2, $4, $3), $6, $1) }
     | ID LBRACKET Exp RBRACKET

@@ -4,7 +4,7 @@ To-Do-List
 2. Lexer TASK 2 		- DONE! 
 3. Lexer TASK 4 		- MISSING! 
 
-1. Parser TASK 1 		- DONE! 
+1. Parser TASK 1.b (!!!)	- DONE! Replace more general production 
 2. Parser TASK 2 		- DONE!
 3. Parser TASK 4		- DONE!
 
