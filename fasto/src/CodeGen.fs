@@ -58,7 +58,6 @@ let SP = "29"
 (* Register for heap pointer *)
 let HP = "28"
 
-(* Dette er en test fra Omar *)
 
 (* Suggested register division *)
 let minReg = 2       (* lowest usable register *)
@@ -247,14 +246,18 @@ let rec compileExp  (e      : TypedExp)
         `Times` and `Divide` are very similar to `Plus`/`Minus`
         `Not` and `Negate` are simpler; you can use `Mips.XORI` for `Not`
   *)
-  | Times (_, _, _) ->
-      failwith "Unimplemented code generation of multiplication"
-
+  | Times (e1, e2, pos) ->
+      let t1 = newName "times_L"
+      let t2 = newName "times_R"
+      let code1 = compileExp e1 vtable t1
+      let code2 = compileExp e2 vtable t2
+      code1 @ code2 @ [Mips.MUL (place,t1,t2)]
   | Divide (_, _, _) ->
       failwith "Unimplemented code generation of division"
 
-  | Not (_, _) ->
-      failwith "Unimplemented code generation of not"
+  | Not (e, pos) ->
+      let t = newName "not"
+      let code = compileExp e vtable
 
   | Negate (_, _) ->
       failwith "Unimplemented code generation of negate"
