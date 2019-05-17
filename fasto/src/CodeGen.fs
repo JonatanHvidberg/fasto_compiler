@@ -431,11 +431,21 @@ let rec compileExp  (e      : TypedExp)
         in `e1 || e2` if the execution of `e1` will evaluate to `true` then
         the code of `e2` must not be executed. Similar for `And` (&&).
   *)
-  | And (_, _, _) ->
-      failwith "Unimplemented code generation of &&"
+  | And (e1, e2, pos) ->
+    let t1 = newName "and_L"
+    let t2 = newName "and_R"
+    let code1 = compileExp e1 vtable t1
+    let code2 = compileExp e2 vtable t2
 
-  | Or (_, _, _) ->
-      failwith "Unimplemented code generation of ||"
+    code1 @ code2 @ [Mips.AND (place,t1,t2)]
+
+  | Or (e1, e2, pos) ->
+    let t1 = newName "and_L"
+    let t2 = newName "and_R"
+    let code1 = compileExp e1 vtable t1
+    let code2 = compileExp e2 vtable t2
+
+    code1 @ code2 @ [Mips.OR (place,t1,t2)]
 
   (* Indexing:
      1. generate code to compute the index
