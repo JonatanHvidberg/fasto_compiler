@@ -174,8 +174,8 @@ let rec compileExp  (e      : TypedExp)
         [ Mips.LUI (place, makeConst (n / 65536))
         ; Mips.ORI (place, place, makeConst (n % 65536)) ]
   | Constant (BoolVal b, pos) ->
-      if b then Mips.LI (place, string "1")
-      else Mips.LI (place, string "0")
+      if b then [Mips.LI (place, string "1")]
+      else [Mips.LI (place, string "0")]
       (* TODO project task 1: represent `true`/`false` values as `1`/`0` *)
   | Constant (CharVal c, pos) -> [ Mips.LI (place, makeConst (int c)) ]
 
@@ -654,19 +654,20 @@ let rec compileExp  (e      : TypedExp)
         If `n` is less than `0` then remember to terminate the program with
         an error -- see implementation of `iota`.
   *)
-  | Replicate (n, e, tp, pos) ->
+  | Replicate (n, e, tp, (line,_)) ->
     let size_reg = newName "size_reg"
     let val_rep = newName "val"
     let e_code = compileExp e vtable val_rep
     let n_code = compileExp n vtable size_reg
     let safe_lab = newName "safe_lab"
 
-    let checksize = [ Mips.ADDI (size_reg,size_reg,"-1")
-                    ; Mips.BGEZ (size_reg, safe_lep)
+    let checksize = [ Mips.ADDI (size_reg,size_reg, "-1")
+                    ; Mips.BGEZ (size_reg, safe_lab)
                     ; Mips.LI ("5", makeConst line)
-                    ; Mips.J "_IllegalArrSizeError_"]
+                    ; Mips.J "_IllegalArrSizeError_"
                     ; Mips.LABEL (safe_lab)
-                    ; Mips.ADDI (size_reg,size_reg,"1")]
+                    ; Mips.ADDI (size_reg, size_reg, "1")
+                    ]
     let arr_reg = newName "arr_reg"
     let i_reg = newName "i_reg"
 
@@ -674,10 +675,11 @@ let rec compileExp  (e      : TypedExp)
     let loop_end = newName "loop_end"
     let tmp_reg = newName "tmp_reg"
 
-    let loop_header = [ Mips.MOVE (i_reg,"0")
+    let loop_header = [ Mips.LI (i_reg, "0")
                       ; Mips.LABEL (loop_beg)
                       ; Mips.SUB (tmp_reg, i_reg , size_reg)
-                      ; Mips.BGEZ (tmp_reg, loop_end)]
+                      ; Mips.BGEZ (tmp_reg, loop_end)
+                      ]
 
     let loop_replicate = [ Mips.SW (val_rep, arr_reg, "0")]
 
@@ -701,7 +703,7 @@ let rec compileExp  (e      : TypedExp)
     @ loop_header
     @ loop_replicate
     @ loop_footer
-    
+
   (* TODO project task 2: see also the comment to replicate.
      (a) `filter(f, arr)`:  has some similarity with the implementation of map.
      (b) Use `applyFunArg` to call `f(a)` in a loop, for every element `a` of `arr`.
@@ -717,8 +719,70 @@ let rec compileExp  (e      : TypedExp)
          counter computed in step (c). You do this of course with a
          `Mips.SW(counter_reg, place, "0")` instruction.
   *)
-  | Filter (_, _, _, _) ->
-      failwith "Unimplemented code generation of map"
+  | Filter (farg, arr_exp, elem_type, pos) ->
+    let size_in_reg = newName "size_in_reg"
+    let size_out_reg = newName "size_out_reg"
+    let arr_reg = newName "arr_reg"
+    let elem_reg = newName "elem_reg"
+    let res_reg = newName "res_reg"
+    let arr_code = compileExp arr_exp vtable arr_reg
+
+    let get size = [ Mips.LW (size_in_reg, arg_reg, "0") ]
+
+    let addr_reg = newName "addr_reg"
+    let i_reg = newName "i_reg"
+    let init_regs = [ Mips.ADDI(addr_reg, place, "4")
+                    ; Mips.MOVE(i_reg, "0")
+                    ; Mips.MOVE(size_out_reg, "0")
+                    ; Mips.ADDI(elem_reg, arr_reg, "4")
+                    ]
+
+    let loop_beg = newName "loop_beg"
+    let loop_end = newName "loop_end"
+    let tmp_reg = newName "tmp_reg"
+    let loop_header = [ Mips.LABEL(loop_beg)
+                      ; Mips.SUB(tmp_reg, i_reg, size_in_reg)
+                      ; Mips.BGEZ(tmp_reg, loop_end)
+                      ]
+    let tmp_bool = newName "tmp_bool"
+    let loop_filter0 =
+        match getElemSize elem_type with
+            | One -> Mips.LB(res_reg, elem_reg, "0")
+                        :: applyFunArg(farg, [res_reg], vtable, tmp_bool, pos)
+            | Four -> Mips.LB(res_reg, elem_reg, "4")
+                        :: applyFunArg(farg, [res_reg], vtable, tmp_bool, pos)
+
+    let falseLabel = newName "falseLabel"
+
+    let loop_filter1 =
+        match getElemSize elem_type with
+            | One ->  [ Mips.BEQ(tmp_bool, "0", falseLabel)
+                      ; Mips.ADDI(elem_reg, elem_reg, "1")
+                      ; Mips.SB(res_reg, addr_reg, "0")
+                      ; Mips.ADDI(size_out_reg, size_out_reg, "1")
+                      ; Mips.ADDI(addr_reg, addr_reg, makeConst (elemSizeToInt (One)))
+                      ; Mips.LABEL(falseLabel)
+                      ]
+            | Four -> [ Mips.BEQ(tmp_bool, "0", falseLabel)
+                      ; Mips.ADDI(elem_reg, elem_reg, "4")
+                      ; Mips.SB(res_reg, addr_reg, "0")
+                      ; Mips.ADDI(size_out_reg, size_out_reg, "1")
+                      ; Mips.ADDI(addr_reg, addr_reg, makeConst (elemSizeToInt (Four)))
+                      ; Mips.LABEL(falseLabel)
+                      ]
+
+    let loop_footer =
+            [ Mips.ADDI (i_reg, i_reg, "1")
+            ; Mips.J loop_beg
+            : Mips.LABEL loop_end
+            ]
+
+    arr_code
+     @ init_regs
+     @ loop_header
+     @ loop_filter0
+     @ loop_filter1
+     @ loop_footer
 
   (* TODO project task 2: see also the comment to replicate.
      `scan(f, ne, arr)`: you can inspire yourself from the implementation of
