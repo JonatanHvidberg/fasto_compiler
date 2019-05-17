@@ -20,12 +20,12 @@ type Instruction =
   | SB   of string*string*string (* SB($rb,$rm,imm): Mem[$rm + imm] = $rb *)
 
   (* Aritmetiske instruktioner *)
-  | ADD  of reg*reg*reg (* ADD($rd,$rs,$rt): $rd = $rs + $rt. *)
+  | ADD  of reg*reg*reg (* ADD($rd,$rs,$rt):  $rd = $rs + $rt. *)
   | ADDI of reg*reg*imm (* ADDI($rd,$rs,imm): $rd = $rs + imm *)
-  | SUB  of reg*reg*reg (* SUB($rd,$rs,$rt): $rd = $rs - $rt. *)
+  | SUB  of reg*reg*reg (* SUB($rd,$rs,$rt):  $rd = $rs - $rt. *)
   | SUBI of reg*reg*imm (* SUBI($rd,$rs,imm): $rd = $rs - imm *)
-  | MUL  of reg*reg*reg (* MUL($rd,$rs,$rt): $rd = $rs * $rt, no overflow. *)
-  | DIV  of reg*reg*reg (* DIV($rd,$rs,$rt): $rd = quotient($rd / $rs), no overflow. *)
+  | MUL  of reg*reg*reg (* MUL($rd,$rs,$rt):  $rd = $rs * $rt, no overflow. *)
+  | DIV  of reg*reg*reg (* DIV($rd,$rs,$rt):  $rd = quotient($rd / $rs), no overflow. *)
 
   (* Bitvise operatorer *)
   | AND  of reg*reg*reg (* AND($rd,$rs,$rt):  $rd = $rs & $rt *)
@@ -128,4 +128,3 @@ and numerical (s: string) =
 
 and intOfString (s: string) =
   Seq.fold ( fun i c -> 10*i + (int c) - (int '0') ) 0 s
-

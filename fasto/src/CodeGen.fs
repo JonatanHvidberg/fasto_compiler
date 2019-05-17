@@ -440,8 +440,8 @@ let rec compileExp  (e      : TypedExp)
     code1 @ code2 @ [Mips.AND (place,t1,t2)]
 
   | Or (e1, e2, pos) ->
-    let t1 = newName "and_L"
-    let t2 = newName "and_R"
+    let t1 = newName "or_L"
+    let t2 = newName "or_R"
     let code1 = compileExp e1 vtable t1
     let code2 = compileExp e2 vtable t2
 
