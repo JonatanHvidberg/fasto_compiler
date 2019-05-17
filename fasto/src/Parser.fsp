@@ -151,11 +151,7 @@ Exp : NUM            { Constant (IntVal (fst $1), snd $1)  }
 
     | LPAR Exp RPAR  { $2 }
     // TODO: task 1(b): replace this with a more general production
-<<<<<<< HEAD
     // | SEMICOLON ID EQ Exp
-=======
-    //| SEMICOLON ID EQ Exp
->>>>>>> 641cded3c8bbd48befcd493e4bbfd2f52b844b04
     //                 {(Dec (fst $2, $4, $3)}
     | LET ID EQ Exp IN Exp %prec letprec
                      { Let (Dec (fst $2, $4, $3), $6, $1) }

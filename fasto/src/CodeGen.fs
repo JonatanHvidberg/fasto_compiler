@@ -174,13 +174,8 @@ let rec compileExp  (e      : TypedExp)
         [ Mips.LUI (place, makeConst (n / 65536))
         ; Mips.ORI (place, place, makeConst (n % 65536)) ]
   | Constant (BoolVal b, pos) ->
-<<<<<<< HEAD
       if b then [Mips.LI (place, string "1")]
       else [Mips.LI (place, string "0")]
-=======
-      if b then [Mips.LI (place, "1")]
-      else [Mips.LI (place, "0")]
->>>>>>> 641cded3c8bbd48befcd493e4bbfd2f52b844b04
       (* TODO project task 1: represent `true`/`false` values as `1`/`0` *)
   | Constant (CharVal c, pos) -> [ Mips.LI (place, makeConst (int c)) ]
 
@@ -666,17 +661,10 @@ let rec compileExp  (e      : TypedExp)
     let n_code = compileExp n vtable size_reg
     let safe_lab = newName "safe_lab"
 
-<<<<<<< HEAD
-    let checksize = [ Mips.ADDI (size_reg,size_reg, "-1")
-                    ; Mips.BGEZ (size_reg, safe_lab)
-                    ; Mips.LI ("5", makeConst line)
-                    ; Mips.J "_IllegalArrSizeError_"
-=======
     let checksize = [ Mips.ADDI (size_reg,size_reg,"-1")
                     ; Mips.BGEZ (size_reg, safe_lab)
                     ; Mips.LI ("5", makeConst line)
                     ; Mips.J ("_IllegalArrSizeError_")
->>>>>>> 641cded3c8bbd48befcd493e4bbfd2f52b844b04
                     ; Mips.LABEL (safe_lab)
                     ; Mips.ADDI (size_reg, size_reg, "1")
                     ]
@@ -687,11 +675,7 @@ let rec compileExp  (e      : TypedExp)
     let loop_end = newName "loop_end"
     let tmp_reg = newName "tmp_reg"
 
-<<<<<<< HEAD
-    let loop_header = [ Mips.LI (i_reg, "0")
-=======
     let loop_header = [ Mips.LI (i_reg,"0")
->>>>>>> 641cded3c8bbd48befcd493e4bbfd2f52b844b04
                       ; Mips.LABEL (loop_beg)
                       ; Mips.SUB (tmp_reg, i_reg , size_reg)
                       ; Mips.BGEZ (tmp_reg, loop_end)
