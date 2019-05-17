@@ -254,6 +254,19 @@ let rec compileExp  (e      : TypedExp)
       code1 @ code2 @ [Mips.MUL (place,t1,t2)]
   | Divide (_, _, _) ->
       failwith "Unimplemented code generation of division"
+=======
+  | Times (_, _, _) ->
+      failwith "Unimplemented code generation of multiplication"
+
+  | Divide (e1, e2, pos) ->
+        let t1 = newName "divide_L"
+        let t2 = newName "divide_R"
+        let code1 = compileExp e1 vtable t1
+        let code2 = compileExp e2 vtable t2
+        code1 @ code2 @ [Mips.DIV (place,t1,t2)]
+
+
+>>>>>>> 5c17f81fdd1106a5c0d6a06d07efca8e5987cdfe
 
   | Not (e, pos) ->
       let t = newName "not"
