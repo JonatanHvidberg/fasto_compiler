@@ -252,25 +252,30 @@ let rec compileExp  (e      : TypedExp)
       let code1 = compileExp e1 vtable t1
       let code2 = compileExp e2 vtable t2
       code1 @ code2 @ [Mips.MUL (place,t1,t2)]
-  | Divide (_, _, _) ->
-      failwith "Unimplemented code generation of division"
-=======
-  | Times (_, _, _) ->
-      failwith "Unimplemented code generation of multiplication"
 
-  | Divide (e1, e2, pos) ->
-        let t1 = newName "divide_L"
-        let t2 = newName "divide_R"
-        let code1 = compileExp e1 vtable t1
-        let code2 = compileExp e2 vtable t2
-        code1 @ code2 @ [Mips.DIV (place,t1,t2)]
+      | Divide (e1, e2, pos) ->
+            let t1 = newName "divide_L"
+            let t2 = newName "divide_R"
+            let zeroLabel = newName "divide_0"
+            let code1 = compileExp e1 vtable t1
+            let code2 = compileExp e2 vtable t2
 
-
->>>>>>> 5c17f81fdd1106a5c0d6a06d07efca8e5987cdfe
+            code1 @ code2 @  [Mips.DIV (place,t1,t2)]
+            //code1 @ code2 @ [Mips.BEQ (t2,"0",zeroLabel)]  @ [Mips.DIV (place,t1,t2)] @
 
   | Not (e, pos) ->
       let t = newName "not"
-      let code = compileExp e vtable
+      let falseLabel = "false"
+      let trueLabel = "true"
+      let code = compileExp e vtable t
+
+      code @ [Mips.BEQ (t,"0",falseLabel)
+      ; Mips.LI (place, string "0")
+      ; Mips.J (trueLabel)
+      ; Mips.LABEL falseLabel
+      ; Mips.LI (place, string "1")
+      ; Mips.LABEL trueLabel]
+      //Mips.LI (place, string "1")
 
   | Negate (_, _) ->
       failwith "Unimplemented code generation of negate"
