@@ -440,8 +440,8 @@ let rec compileExp  (e      : TypedExp)
     code1 @ code2 @ [Mips.AND (place,t1,t2)]
 
   | Or (e1, e2, pos) ->
-    let t1 = newName "and_L"
-    let t2 = newName "and_R"
+    let t1 = newName "or_L"
+    let t2 = newName "or_R"
     let code1 = compileExp e1 vtable t1
     let code2 = compileExp e2 vtable t2
 
@@ -654,9 +654,54 @@ let rec compileExp  (e      : TypedExp)
         If `n` is less than `0` then remember to terminate the program with
         an error -- see implementation of `iota`.
   *)
-  | Replicate (_, _, _, _) ->
-      failwith "Unimplemented code generation of replicate"
+  | Replicate (n, e, tp, pos) ->
+    let size_reg = newName "size_reg"
+    let val_rep = newName "val"
+    let e_code = compileExp e vtable val_rep
+    let n_code = compileExp n vtable size_reg
+    let safe_lab = newName "safe_lab"
 
+    let checksize = [ Mips.ADDI (size_reg,size_reg,"-1")
+                    ; Mips.BGEZ (size_reg, safe_lep)
+                    ; Mips.LI ("5", makeConst line)
+                    ; Mips.J "_IllegalArrSizeError_"]
+                    ; Mips.LABEL (safe_lab)
+                    ; Mips.ADDI (size_reg,size_reg,"1")]
+    let arr_reg = newName "arr_reg"
+    let i_reg = newName "i_reg"
+
+    let loop_beg = newName "loop_beg"
+    let loop_end = newName "loop_end"
+    let tmp_reg = newName "tmp_reg"
+
+    let loop_header = [ Mips.MOVE (i_reg,"0")
+                      ; Mips.LABEL (loop_beg)
+                      ; Mips.SUB (tmp_reg, i_reg , size_reg)
+                      ; Mips.BGEZ (tmp_reg, loop_end)]
+
+    let loop_replicate = [ Mips.SW (val_rep, arr_reg, "0")]
+
+    let loop_footer =
+      match getElemSize tp with
+        | One  -> [ Mips.ADDI (arr_reg, arr_reg,"1")
+                  ; Mips.ADDI (i_reg, i_reg, "1")
+                  ; Mips.J loop_beg
+                  ; Mips.LABEL loop_end
+                  ]
+
+        | Four -> [ Mips.ADDI (arr_reg, arr_reg,"4")
+                  ; Mips.ADDI (i_reg, i_reg, "1")
+                  ; Mips.J loop_beg
+                  ; Mips.LABEL loop_end
+                  ]
+    e_code
+    @ n_code
+    @ checksize
+    @ dynalloc (size_reg , arr_reg, tp)
+    @ loop_header
+    @ loop_replicate
+    @ loop_footer
+    
   (* TODO project task 2: see also the comment to replicate.
      (a) `filter(f, arr)`:  has some similarity with the implementation of map.
      (b) Use `applyFunArg` to call `f(a)` in a loop, for every element `a` of `arr`.
