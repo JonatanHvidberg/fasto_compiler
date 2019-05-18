@@ -810,9 +810,63 @@ let rec compileExp  (e      : TypedExp)
 
   *)
 
-  | Scan (_, _, _, _, _) ->
+  | Scan (farg, e, arr_exp, elem_type, pos) ->
 
+    let size_reg = newName "size_reg"
+    let val_reg = newName "val_reg"
+    let arr_reg = newName "arg_reg"
+    let elem_reg = newName "elem_reg"
+    let res_reg = newName "res_reg"
 
+    let val_code = compileExp e vtable val_reg
+    let arr_code = compileExp arr_exp vtable arr_reg
+    let get_size = [ Mips.LW(size_reg, arr_reg, "0") ]
+
+    let addr_reg = newName "addr_reg"
+    let i_reg = newName "i_reg"
+
+    let init_regs = [ Mips.ADDI (addr_reg, place, "4")
+                    ; Mips.MOVE (i_reg, "0")
+                    ; Mips_ADDI (elem_reg, arg_reg, "4")
+                    ]
+
+    let loop_beg = newName "loop_beg"
+    let loop_end = newName "loop_end"
+    let tmp_reg = newName "tmp_reg"
+
+    let loop_header = [ Mips.LABEL (loop_beg)
+                      ; Mips.SUB (tmp_reg, i_reg, size_reg)
+                      ; Mips.BGEZ (tmp_reg, loop_end)
+                      ]
+    let loop_scan0 =
+        match getElemSize elem_type with
+          | One  -> Mips.LB(res_reg, elem_reg, "0")
+                       :: applyFunArg(farg, [val_reg, res_reg], vtable, val_reg, pos)
+                       @  [ Mips.ADDI(elem_reg, elem_reg, "1") ]
+          | Four -> Mips.LW(res_reg, elem_reg, "0")
+                       :: applyFunArg(farg, [val_reg, res_reg], vtable, val_reg, pos)
+                       @ [ Mips.ADDI(elem_reg, elem_reg, "4") ]
+    let loop_scan1 =
+        match getElemSize elem_type with
+          | One  -> Mips.SB(val_reg, elem_reg, "0")
+          | Four -> Mips.SW(val_reg, elem_reg, "0")
+
+    let loop_footer =
+             [ Mips.ADDI (addr_reg, addr_reg,
+                          makeConst (elemSizeToInt (getElemSize elem_type)))
+             ; Mips.ADDI (i_reg, i_reg, "1")
+             ; Mips.J loop_beg
+             ; Mips.LABEL loop_end
+             ]
+    val_code
+    @ arr_code
+    @ get_size
+    @ dynalloc(size_reg, arr_reg, elem_type)
+    @ init_regs
+    @ loop_header
+    @ loop_scan0
+    @ loop_scan1
+    @ loop_footer  
 
 and applyFunArg ( ff     : TypedFunArg
                 , args   : Mips.reg list
