@@ -585,6 +585,11 @@ let rec compileExp  (e      : TypedExp)
        @ loop_map1
        @ loop_footer
 
+  // Signature:
+  // List.reduce : ('T -> 'T -> 'T) -> 'T list -> 'T
+
+  // Usage:
+  // List.reduce reduction list
 
   (* reduce(f, acc, {x1, x2, ...}) = f(..., f(x2, f(x1, acc))) *)
   | Reduce (binop, acc_exp, arr_exp, tp, pos) ->
@@ -791,8 +796,23 @@ let rec compileExp  (e      : TypedExp)
         the current location of the result iterator at every iteration of
         the loop.
   *)
+
+  // Signature:
+  // List.scan : ('State -> 'T -> 'State) -> 'State -> 'T list -> 'State list
+
+  // Usage:
+  // List.scan folder state list
+
+  (*
+
+  The actual behavior of overflow is undefined, so if errors occur during
+  execution, or you see strange results, it might be due to overflow.
+
+  *)
+
   | Scan (_, _, _, _, _) ->
-      failwith "Unimplemented code generation of scan"
+
+
 
 and applyFunArg ( ff     : TypedFunArg
                 , args   : Mips.reg list
