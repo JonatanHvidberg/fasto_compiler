@@ -727,7 +727,7 @@ let rec compileExp  (e      : TypedExp)
     let res_reg = newName "res_reg"
     let arr_code = compileExp arr_exp vtable arr_reg
 
-    let get size = [ Mips.LW (size_in_reg, arg_reg, "0") ]
+    let get size = [ Mips.LW (size_in_reg, arr_reg, "0") ]
 
     let addr_reg = newName "addr_reg"
     let i_reg = newName "i_reg"
@@ -774,7 +774,7 @@ let rec compileExp  (e      : TypedExp)
     let loop_footer =
             [ Mips.ADDI (i_reg, i_reg, "1")
             ; Mips.J loop_beg
-            : Mips.LABEL loop_end
+            ; Mips.LABEL loop_end
             ]
 
     arr_code
