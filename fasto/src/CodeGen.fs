@@ -828,7 +828,7 @@ let rec compileExp  (e      : TypedExp)
 
     let init_regs = [ Mips.ADDI (addr_reg, place, "4")
                     ; Mips.MOVE (i_reg, "0")
-                    ; Mips_ADDI (elem_reg, arg_reg, "4")
+                    ; Mips.ADDI (elem_reg, arr_reg, "4")
                     ]
 
     let loop_beg = newName "loop_beg"
@@ -842,15 +842,15 @@ let rec compileExp  (e      : TypedExp)
     let loop_scan0 =
         match getElemSize elem_type with
           | One  -> Mips.LB(res_reg, elem_reg, "0")
-                       :: applyFunArg(farg, [val_reg, res_reg], vtable, val_reg, pos)
+                       :: applyFunArg(farg, [val_reg; res_reg], vtable, val_reg, pos)
                        @  [ Mips.ADDI(elem_reg, elem_reg, "1") ]
           | Four -> Mips.LW(res_reg, elem_reg, "0")
-                       :: applyFunArg(farg, [val_reg, res_reg], vtable, val_reg, pos)
+                       :: applyFunArg(farg, [val_reg; res_reg], vtable, val_reg, pos)
                        @ [ Mips.ADDI(elem_reg, elem_reg, "4") ]
     let loop_scan1 =
         match getElemSize elem_type with
-          | One  -> Mips.SB(val_reg, elem_reg, "0")
-          | Four -> Mips.SW(val_reg, elem_reg, "0")
+          | One  -> [Mips.SB(val_reg, elem_reg, "0")]
+          | Four -> [Mips.SW(val_reg, elem_reg, "0")]
 
     let loop_footer =
              [ Mips.ADDI (addr_reg, addr_reg,
@@ -867,7 +867,7 @@ let rec compileExp  (e      : TypedExp)
     @ loop_header
     @ loop_scan0
     @ loop_scan1
-    @ loop_footer  
+    @ loop_footer
 
 and applyFunArg ( ff     : TypedFunArg
                 , args   : Mips.reg list

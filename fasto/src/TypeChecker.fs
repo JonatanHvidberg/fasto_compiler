@@ -337,7 +337,7 @@ and checkExp  (ftab : FunTable)
         if (el_tp=e_tp) then
           let (rea_tp_fn, inp_tp_fn, dec_farg) =
               match checkFunArg ftab vtab pos farg with
-                  | (farg_dec, res_tp, [inp_tp]) -> (res_tp, inp_tp, farg_dec)
+                  | (farg_dec, res_tp, [el_tp ; inp_tp]) -> (res_tp, inp_tp, farg_dec)
                   | _ -> raise (MyError("Scan: function argument does not take
                                           exactly on param ", pos))
           if (rea_tp_fn = e_tp) && (el_tp = inp_tp_fn)
