@@ -9,7 +9,7 @@ type imm  = string
 type addr = string
 
 type Instruction =
-  |  LABEL   of addr     (* Angiver en label, man fx kan hoppe til *)
+    LABEL   of addr     (* Angiver en label, man fx kan hoppe til *)
   | COMMENT of string   (* Placerer en kommentar i assemblerkoden *)
 
   | LA   of reg*addr             (* LA($rd,addr):    $rd = addr (label) *)

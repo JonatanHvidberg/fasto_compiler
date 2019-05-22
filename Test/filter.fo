@@ -1,0 +1,10 @@
+fun int write_int(int x) = write(x)
+fun [int] write_int_arr([int] x) = map(write_int, x)
+fun int readInt (int i) = read(int)
+
+fun [int] main() =
+  let n = 15 in
+  let x = iota(n) in
+  //let z = map(readInt, x) in
+  let y = filter (fn bool (int x) => x<7, x) in
+  write_int_arr (y)

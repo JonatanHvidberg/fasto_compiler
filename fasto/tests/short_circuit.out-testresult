@@ -1,4 +1,4 @@
-Error in /home/jonatan/Documents/dico/IPS/Group project/fasto_compiler/fasto/bin/../tests/short_circuit.asm line 22: Runtime exception at 0x00400034: address out of range 0x7fbffffc
+Error in /home/jonatan/Documents/dico/IPS/Group project/fasto_compiler-25fa1111715794ed2efd10e3a1733a724b8c1bf6/fasto/bin/../tests/short_circuit.asm line 22: Runtime exception at 0x00400034: address out of range 0x7fbffffc
 
 Processing terminated due to errors.
 

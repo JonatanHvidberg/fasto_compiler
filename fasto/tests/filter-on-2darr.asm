@@ -190,13 +190,15 @@ _false_39_:
 # Function main
 main:
 	sw	$31, -4($29)
+	sw	$23, -36($29)
+	sw	$22, -32($29)
 	sw	$21, -28($29)
 	sw	$20, -24($29)
 	sw	$19, -20($29)
 	sw	$18, -16($29)
 	sw	$17, -12($29)
 	sw	$16, -8($29)
-	addi	$29, $29, -32
+	addi	$29, $29, -40
 	jal	getint
 # was:	jal	getint, 2
 	ori	$10, $2, 0
@@ -222,20 +224,20 @@ _safe_lab_48_:
 # was:	add	28, 28, _tmp_54_
 	sw	$10, 0($14)
 # was:	sw	_size_reg_47_, 0(_arr_reg_44_)
-	addi	$11, $14, 4
+	addi	$12, $14, 4
 # was:	addi	_addr_reg_49_, _arr_reg_44_, 4
-	ori	$12, $0, 0
+	ori	$13, $0, 0
 # was:	ori	_i_reg_50_, 0, 0
 _loop_beg_51_:
-	sub	$13, $12, $10
+	sub	$11, $13, $10
 # was:	sub	_tmp_reg_53_, _i_reg_50_, _size_reg_47_
-	bgez	$13, _loop_end_52_
+	bgez	$11, _loop_end_52_
 # was:	bgez	_tmp_reg_53_, _loop_end_52_
-	sw	$12, 0($11)
+	sw	$13, 0($12)
 # was:	sw	_i_reg_50_, 0(_addr_reg_49_)
-	addi	$11, $11, 4
+	addi	$12, $12, 4
 # was:	addi	_addr_reg_49_, _addr_reg_49_, 4
-	addi	$12, $12, 1
+	addi	$13, $13, 1
 # was:	addi	_i_reg_50_, _i_reg_50_, 1
 	j	_loop_beg_51_
 _loop_end_52_:
@@ -289,20 +291,20 @@ _safe_lab_64_:
 # was:	add	28, 28, _tmp_70_
 	sw	$15, 0($16)
 # was:	sw	_size_reg_61_, 0(_fun_arg_res_60_)
-	addi	$18, $16, 4
+	addi	$19, $16, 4
 # was:	addi	_addr_reg_65_, _fun_arg_res_60_, 4
-	ori	$17, $0, 0
+	ori	$18, $0, 0
 # was:	ori	_i_reg_66_, 0, 0
 _loop_beg_67_:
-	sub	$19, $17, $15
+	sub	$17, $18, $15
 # was:	sub	_tmp_reg_69_, _i_reg_66_, _size_reg_61_
-	bgez	$19, _loop_end_68_
+	bgez	$17, _loop_end_68_
 # was:	bgez	_tmp_reg_69_, _loop_end_68_
-	sw	$17, 0($18)
+	sw	$18, 0($19)
 # was:	sw	_i_reg_66_, 0(_addr_reg_65_)
-	addi	$18, $18, 4
+	addi	$19, $19, 4
 # was:	addi	_addr_reg_65_, _addr_reg_65_, 4
-	addi	$17, $17, 1
+	addi	$18, $18, 1
 # was:	addi	_i_reg_66_, _i_reg_66_, 1
 	j	_loop_beg_67_
 _loop_end_68_:
@@ -319,79 +321,97 @@ _loop_end_68_:
 	j	_loop_beg_57_
 _loop_end_58_:
 # 	ori	_arr_reg_75_,_letBind_42_,0
-	addi	$17, $21, 4
+	lw	$16, 0($11)
+# was:	lw	_size_in_reg_73_, 0(_arr_reg_75_)
+	ori	$17, $28, 0
+# was:	ori	_letBind_72_, 28, 0
+	sll	$10, $16, 2
+# was:	sll	_tmp_98_, _size_in_reg_73_, 2
+	addi	$10, $10, 4
+# was:	addi	_tmp_98_, _tmp_98_, 4
+	add	$28, $28, $10
+# was:	add	28, 28, _tmp_98_
+	sw	$16, 0($17)
+# was:	sw	_size_in_reg_73_, 0(_letBind_72_)
+	addi	$20, $17, 4
 # was:	addi	_addr_reg_78_, _letBind_72_, 4
-	ori	$16, $0, 0
-# was:	ori	_i_reg_79_, 0, 0
+	addi	$19, $17, 0
+# was:	addi	_set_size_reg_80_, _letBind_72_, 0
 	ori	$18, $0, 0
+# was:	ori	_i_reg_79_, 0, 0
+	ori	$21, $0, 0
 # was:	ori	_size_out_reg_74_, 0, 0
-	addi	$19, $11, 4
+	addi	$22, $11, 4
 # was:	addi	_elem_reg_76_, _arr_reg_75_, 4
-_loop_beg_80_:
-	sub	$10, $16, $21
-# was:	sub	_tmp_reg_82_, _i_reg_79_, _size_in_reg_73_
-	bgez	$10, _loop_end_81_
-# was:	bgez	_tmp_reg_82_, _loop_end_81_
-	lb	$20, 4($19)
-# was:	lb	_res_reg_77_, 4(_elem_reg_76_)
-	ori	$11, $20, 0
-# was:	ori	_arr_reg_86_, _res_reg_77_, 0
-	lw	$12, 0($11)
-# was:	lw	_size_reg_87_, 0(_arr_reg_86_)
+_loop_beg_81_:
+	sub	$10, $18, $16
+# was:	sub	_tmp_reg_83_, _i_reg_79_, _size_in_reg_73_
+	bgez	$10, _loop_end_82_
+# was:	bgez	_tmp_reg_83_, _loop_end_82_
+	lw	$23, 0($22)
+# was:	lw	_res_reg_77_, 0(_elem_reg_76_)
+	ori	$10, $23, 0
+# was:	ori	_arr_reg_87_, _res_reg_77_, 0
+	lw	$11, 0($10)
+# was:	lw	_size_reg_88_, 0(_arr_reg_87_)
 	ori	$14, $0, 0
-# was:	ori	_letBind_85_, 0, 0
-	addi	$11, $11, 4
-# was:	addi	_arr_reg_86_, _arr_reg_86_, 4
-	ori	$13, $0, 0
-# was:	ori	_ind_var_88_, 0, 0
-_loop_beg_90_:
-	sub	$10, $13, $12
-# was:	sub	_tmp_reg_89_, _ind_var_88_, _size_reg_87_
-	bgez	$10, _loop_end_91_
-# was:	bgez	_tmp_reg_89_, _loop_end_91_
-	lw	$10, 0($11)
-# was:	lw	_tmp_reg_89_, 0(_arr_reg_86_)
-	addi	$11, $11, 4
-# was:	addi	_arr_reg_86_, _arr_reg_86_, 4
-# 	ori	_plus_L_93_,_letBind_85_,0
-# 	ori	_plus_R_94_,_tmp_reg_89_,0
-	add	$14, $14, $10
-# was:	add	_fun_arg_res_92_, _plus_L_93_, _plus_R_94_
-# 	ori	_letBind_85_,_fun_arg_res_92_,0
-	addi	$13, $13, 1
-# was:	addi	_ind_var_88_, _ind_var_88_, 1
-	j	_loop_beg_90_
-_loop_end_91_:
-# 	ori	_arg_95_,_letBind_85_,0
+# was:	ori	_letBind_86_, 0, 0
+	addi	$10, $10, 4
+# was:	addi	_arr_reg_87_, _arr_reg_87_, 4
+	ori	$12, $0, 0
+# was:	ori	_ind_var_89_, 0, 0
+_loop_beg_91_:
+	sub	$13, $12, $11
+# was:	sub	_tmp_reg_90_, _ind_var_89_, _size_reg_88_
+	bgez	$13, _loop_end_92_
+# was:	bgez	_tmp_reg_90_, _loop_end_92_
+	lw	$13, 0($10)
+# was:	lw	_tmp_reg_90_, 0(_arr_reg_87_)
+	addi	$10, $10, 4
+# was:	addi	_arr_reg_87_, _arr_reg_87_, 4
+# 	ori	_plus_L_94_,_letBind_86_,0
+# 	ori	_plus_R_95_,_tmp_reg_90_,0
+	add	$14, $14, $13
+# was:	add	_fun_arg_res_93_, _plus_L_94_, _plus_R_95_
+# 	ori	_letBind_86_,_fun_arg_res_93_,0
+	addi	$12, $12, 1
+# was:	addi	_ind_var_89_, _ind_var_89_, 1
+	j	_loop_beg_91_
+_loop_end_92_:
+# 	ori	_arg_96_,_letBind_86_,0
 	ori	$2, $14, 0
-# was:	ori	2, _arg_95_, 0
+# was:	ori	2, _arg_96_, 0
 	jal	even
 # was:	jal	even, 2
-# 	ori	_fun_arg_res_84_,2,0
-# 	ori	_tmp_bool_83_,_fun_arg_res_84_,0
-	beq	$2, $0, _falseLabel_96_
-# was:	beq	_tmp_bool_83_, 0, _falseLabel_96_
-	addi	$19, $19, 4
+# 	ori	_fun_arg_res_85_,2,0
+# 	ori	_tmp_bool_84_,_fun_arg_res_85_,0
+	addi	$22, $22, 4
 # was:	addi	_elem_reg_76_, _elem_reg_76_, 4
-	sb	$20, 0($17)
-# was:	sb	_res_reg_77_, 0(_addr_reg_78_)
-	addi	$18, $18, 1
+	beq	$2, $0, _falseLabel_97_
+# was:	beq	_tmp_bool_84_, 0, _falseLabel_97_
+	sw	$23, 0($20)
+# was:	sw	_res_reg_77_, 0(_addr_reg_78_)
+	addi	$21, $21, 1
 # was:	addi	_size_out_reg_74_, _size_out_reg_74_, 1
-	addi	$17, $17, 4
+	addi	$20, $20, 4
 # was:	addi	_addr_reg_78_, _addr_reg_78_, 4
-_falseLabel_96_:
-	addi	$16, $16, 1
+_falseLabel_97_:
+	addi	$18, $18, 1
 # was:	addi	_i_reg_79_, _i_reg_79_, 1
-	j	_loop_beg_80_
-_loop_end_81_:
-	ori	$2, $21, 0
-# was:	ori	_arg_97_, _letBind_72_, 0
-# 	ori	2,_arg_97_,0
+	j	_loop_beg_81_
+_loop_end_82_:
+	sw	$21, 0($19)
+# was:	sw	_size_out_reg_74_, 0(_set_size_reg_80_)
+# 	ori	_arg_99_,_letBind_72_,0
+	ori	$2, $17, 0
+# was:	ori	2, _arg_99_, 0
 	jal	write_2darr
 # was:	jal	write_2darr, 2
 # 	ori	_mainres_40_,2,0
 # 	ori	2,_mainres_40_,0
-	addi	$29, $29, 32
+	addi	$29, $29, 40
+	lw	$23, -36($29)
+	lw	$22, -32($29)
 	lw	$21, -28($29)
 	lw	$20, -24($29)
 	lw	$19, -20($29)

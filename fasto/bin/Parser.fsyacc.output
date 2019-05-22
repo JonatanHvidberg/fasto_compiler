@@ -757,7 +757,7 @@ state 12:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -943,7 +943,7 @@ state 15:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -2081,7 +2081,7 @@ state 34:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -2505,56 +2505,56 @@ state 41:
     Exp -> Exp . 'OR' Exp
 
   actions:
-    action 'LPAR' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'RPAR' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'LBRACKET' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'RBRACKET' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'LCURLY' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'RCURLY' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'FUN' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'FN' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'COMMA' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'SEMICOLON' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'READ' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'WRITE' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'DEQ' (explicit left 9998):   shift 74
-    action 'LTH' (explicit left 9998):   shift 75
-    action 'EQ' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'OP' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'NOT' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'AND' (explicit right 9996):   shift 77
-    action 'OR' (explicit right 9995):   shift 78
-    action 'MAP' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'REDUCE' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'FILTER' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'SCAN' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'REPLICATE' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'IOTA' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'ARROW' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'PLUS' (explicit left 9999):   shift 69
-    action 'MINUS' (explicit left 9999):   shift 70
-    action 'LESS' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'TIMES' (explicit left 10000):   shift 71
-    action 'DIVIDE' (explicit left 10000):   shift 72
-    action 'NEGATE' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'INT' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'CHAR' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'BOOL' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'IF' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'THEN' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'ELSE' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'LET' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'IN' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'EOF' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'TRUE' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'FALSE' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'ID' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'STRINGLIT' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'CHARLIT' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'NUM' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action 'error' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action '#' (noprec):   reduce Exp --> 'NEGATE' Exp
-    action '$$' (noprec):   reduce Exp --> 'NEGATE' Exp
+    action 'LPAR' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'RPAR' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'LBRACKET' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'RBRACKET' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'LCURLY' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'RCURLY' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'FUN' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'FN' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'COMMA' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'SEMICOLON' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'READ' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'WRITE' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'DEQ' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'LTH' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'EQ' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'OP' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'NOT' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'AND' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'OR' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'MAP' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'REDUCE' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'FILTER' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'SCAN' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'REPLICATE' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'IOTA' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'ARROW' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'PLUS' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'MINUS' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'LESS' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'TIMES' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'DIVIDE' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'NEGATE' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'INT' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'CHAR' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'BOOL' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'IF' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'THEN' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'ELSE' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'LET' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'IN' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'EOF' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'TRUE' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'FALSE' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'ID' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'STRINGLIT' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'CHARLIT' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'NUM' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action 'error' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action '#' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
+    action '$$' (explicit left 10000):   reduce Exp --> 'NEGATE' Exp
 
   immediate action: <none>
  gotos:
@@ -4405,7 +4405,7 @@ state 69:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -4465,7 +4465,7 @@ state 70:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -4525,7 +4525,7 @@ state 71:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -4585,7 +4585,7 @@ state 72:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -4645,7 +4645,7 @@ state 73:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -4705,7 +4705,7 @@ state 74:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -4765,7 +4765,7 @@ state 75:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -4825,7 +4825,7 @@ state 76:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -4885,7 +4885,7 @@ state 77:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -4945,7 +4945,7 @@ state 78:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -5005,7 +5005,7 @@ state 79:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -5065,7 +5065,7 @@ state 80:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -5125,7 +5125,7 @@ state 81:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -5186,7 +5186,7 @@ state 82:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -5720,7 +5720,7 @@ state 91:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -5898,7 +5898,7 @@ state 94:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -6195,7 +6195,7 @@ state 99:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -6494,7 +6494,7 @@ state 104:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -6554,7 +6554,7 @@ state 105:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -6792,7 +6792,7 @@ state 109:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -6852,7 +6852,7 @@ state 110:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -7149,7 +7149,7 @@ state 115:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -7446,7 +7446,7 @@ state 120:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -7506,7 +7506,7 @@ state 121:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -7684,7 +7684,7 @@ state 124:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -7744,7 +7744,7 @@ state 125:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -7863,7 +7863,7 @@ state 127:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -8100,7 +8100,7 @@ state 131:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -8160,7 +8160,7 @@ state 132:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -8220,7 +8220,7 @@ state 133:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -8339,7 +8339,7 @@ state 135:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -8760,7 +8760,7 @@ state 142:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error
@@ -8938,7 +8938,7 @@ state 145:
     action 'LESS' (noprec):   error
     action 'TIMES' (noprec):   error
     action 'DIVIDE' (noprec):   error
-    action 'NEGATE' (noprec):   shift 73
+    action 'NEGATE' (explicit left 10000):   shift 73
     action 'INT' (noprec):   error
     action 'CHAR' (noprec):   error
     action 'BOOL' (noprec):   error

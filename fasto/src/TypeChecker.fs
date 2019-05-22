@@ -146,7 +146,7 @@ and checkExp  (ftab : FunTable)
         let (t1, e1_dec) = checkExp ftab vtab e1
         if (Int = t1)
         then (Int, Negate (e1_dec, pos))
-        else raise (MyError ("In Not: type is not Int: "+ppType t1, pos))
+        else raise (MyError ("In Negate: type is not Int: "+ppType t1, pos))
 
     (* The types for e1, e2 must be the same. The result is always a Bool. *)
     | Equal (e1, e2, pos) ->
@@ -337,7 +337,7 @@ and checkExp  (ftab : FunTable)
         if (el_tp=e_tp) then
           let (rea_tp_fn, inp_tp_fn, dec_farg) =
               match checkFunArg ftab vtab pos farg with
-                  | (farg_dec, res_tp, [el_tp ; inp_tp]) -> (res_tp, inp_tp, farg_dec)
+                  | (farg_dec, res_tp, [e_tp; inp_tp]) -> (res_tp, inp_tp, farg_dec)
                   | _ -> raise (MyError("Scan: function argument does not take
                                           exactly on param ", pos))
           if (rea_tp_fn = e_tp) && (el_tp = inp_tp_fn)
