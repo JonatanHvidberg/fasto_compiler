@@ -92,7 +92,7 @@ rule Token = parse
                                   ( int (Encoding.UTF8.GetString(lexbuf.Lexeme))
                                   , getPos lexbuf )
                               }
-  | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']*
+  | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z']*|['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z']*['_']['a'-'z' 'A'-'Z' '0'-'9' '_']*
                           { keyword ( Encoding.UTF8.GetString(lexbuf.Lexeme)
                                     , getPos lexbuf ) }
   | "\'" ( ("\\" [' '-'~']) | [' ' '!' '#'-'&' '('-'[' ']'-'~'] ) "\'"
