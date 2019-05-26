@@ -1,15 +1,15 @@
 To-Do-List
 
 1. Lexer TASK 1 		- DONE!
-2. Lexer TASK 2 		- DONE! 
-3. Lexer TASK 4 		- MISSING! 
+2. Lexer TASK 2 		- DONE!
+3. Lexer TASK 4 		- MISSING!
 
-1. Parser TASK 1.b (!!!)	- DONE! Replace more general production 
+1. Parser TASK 1.b (!!!)	- DONE! Replace more general production
 2. Parser TASK 2 		- DONE!
 3. Parser TASK 4		- DONE!
 
 1. TypeChecker			- DONE!
-2. TypeChecker			- DONE! 
+2. TypeChecker			- DONE!
 
 1. Interpreter TASK 1		- DONE!
 2. Interpreter TASK 2		- DONE!
@@ -18,3 +18,13 @@ To-Do-List
 2. CodeGen TASK2 		- MISSING! !!
 
 3. DeadBindingRemoval TASK3	- MISSING! !!
+
+NEGATE - fungerer negate som vi tror?
+DIVIDE - hvilken error skal vi tilføje?
+
+Skal vi kommentere koden?
+
+Variable navne skift i replicate
+
+Skriv til Camille om vi skal have kode med fra CodeGen eller om vi kan nøjes med
+C-Like pseudokoden.

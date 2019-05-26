@@ -661,8 +661,8 @@ let rec compileExp  (e      : TypedExp)
   *)
   | Replicate (n, e, tp, (line,_)) ->
     let size_reg = newName "size_reg"
-    let val_rep = newName "val"
-    let e_code = compileExp e vtable val_rep
+    let val_reg = newName "val"
+    let e_code = compileExp e vtable val_reg
     let n_code = compileExp n vtable size_reg
     let safe_lab = newName "safe_lab"
 
@@ -688,18 +688,16 @@ let rec compileExp  (e      : TypedExp)
                       ; Mips.BGEZ (tmp_reg, loop_end)
                       ]
 
-    //let loop_replicate = [ ]
-
     let loop_footer =
       match getElemSize tp with
-        | One  -> [ Mips.SB (val_rep, addr_reg, "0")
+        | One  -> [ Mips.SB (val_reg, addr_reg, "0")
                   ; Mips.ADDI (addr_reg, addr_reg,"1")
                   ; Mips.ADDI (i_reg, i_reg, "1")
                   ; Mips.J loop_beg
                   ; Mips.LABEL loop_end
                   ]
 
-        | Four -> [ Mips.SW (val_rep, addr_reg, "0")
+        | Four -> [ Mips.SW (val_reg, addr_reg, "0")
                   ; Mips.ADDI (addr_reg, addr_reg,"4")
                   ; Mips.ADDI (i_reg, i_reg, "1")
                   ; Mips.J loop_beg
@@ -741,10 +739,8 @@ let rec compileExp  (e      : TypedExp)
     let addr_reg = newName "addr_reg"
     let i_reg = newName "i_reg"
 
-    let set_size_reg = newName "set_size_reg"
 
     let init_regs = [ Mips.ADDI(addr_reg, place, "4")
-                    ; Mips.ADDI(set_size_reg, place, "0")
                     ; Mips.MOVE(i_reg, "0")
                     ; Mips.MOVE(size_out_reg, "0")
                     ; Mips.ADDI(elem_reg, arr_reg, "4")
@@ -789,7 +785,7 @@ let rec compileExp  (e      : TypedExp)
             [ Mips.ADDI (i_reg, i_reg, "1")
             ; Mips.J loop_beg
             ; Mips.LABEL loop_end
-            ; Mips.SW (size_out_reg,set_size_reg,"0")
+            ; Mips.SW (size_out_reg, place,"0")
             ]
 
     arr_code
