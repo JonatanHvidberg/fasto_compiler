@@ -107,6 +107,7 @@ type nonTerminalId =
     | NONTERM_Params
     | NONTERM_BinOp
     | NONTERM_Exp
+    | NONTERM_Decs
     | NONTERM_Exps
     | NONTERM_FunArg
 /// This function maps tokens to integer indexes
