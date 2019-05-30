@@ -100,7 +100,7 @@ let rec copyConstPropFoldExp (vtable : VarTable)
                 Constant (IntVal (x * y), pos)
             | (Constant (IntVal 1, _), _) -> e2'
             | (_, Constant (IntVal 1, _)) -> e1'
-            (* IO 
+            (* IO
             | (Constant (IntVal 0, _), _) -> Constant (IntVal 0, pos)
             | (_, Constant (IntVal 0, _)) -> Constant (IntVal 0, pos)
             *)

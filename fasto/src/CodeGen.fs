@@ -264,8 +264,6 @@ let rec compileExp  (e      : TypedExp)
 
   | Not (e, pos) ->
       let t = newName "not"
-      let falseLabel = "false"
-      let trueLabel = "true"
       let code = compileExp e vtable t
 
       code @ [Mips.XORI (place,t,"1")]
