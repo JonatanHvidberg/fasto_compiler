@@ -35,36 +35,50 @@ main:
 	addi	$29, $29, -12
 	ori	$16, $0, 0
 # was:	ori	_and_L_5_, 0, 0
+	bne	$16, $0, _trueLabel_7_
+# was:	bne	_and_L_5_, 0, _trueLabel_7_
+	add	$10, $16, $0
+# was:	add	_tmp_4_, _and_L_5_, 0
+	j	_endLabel_8_
+_trueLabel_7_:
 	jal	no_way
 # was:	jal	no_way, 
 # 	ori	_and_R_6_,2,0
 	and	$10, $16, $2
 # was:	and	_tmp_4_, _and_L_5_, _and_R_6_
+_endLabel_8_:
 # 	ori	_letBind_3_,_tmp_4_,0
 	la	$2, _true
 # was:	la	2, _true
-	bne	$10, $0, _wBoolF_7_
-# was:	bne	_letBind_3_, 0, _wBoolF_7_
+	bne	$10, $0, _wBoolF_9_
+# was:	bne	_letBind_3_, 0, _wBoolF_9_
 	la	$2, _false
 # was:	la	2, _false
-_wBoolF_7_:
+_wBoolF_9_:
 	jal	putstring
 # was:	jal	putstring, 2
 	ori	$16, $0, 1
-# was:	ori	_or_L_10_, 0, 1
+# was:	ori	_or_L_12_, 0, 1
+	beq	$16, $0, _falseLabel_14_
+# was:	beq	_or_L_12_, 0, _falseLabel_14_
+	add	$10, $16, $0
+# was:	add	_tmp_11_, _or_L_12_, 0
+	j	_endLabel_15_
+_falseLabel_14_:
 	jal	no_way
 # was:	jal	no_way, 
-# 	ori	_or_R_11_,2,0
+# 	ori	_or_R_13_,2,0
 	or	$10, $16, $2
-# was:	or	_tmp_9_, _or_L_10_, _or_R_11_
-# 	ori	_letBind_8_,_tmp_9_,0
+# was:	or	_tmp_11_, _or_L_12_, _or_R_13_
+_endLabel_15_:
+# 	ori	_letBind_10_,_tmp_11_,0
 	la	$2, _true
 # was:	la	2, _true
-	bne	$10, $0, _wBoolF_12_
-# was:	bne	_letBind_8_, 0, _wBoolF_12_
+	bne	$10, $0, _wBoolF_16_
+# was:	bne	_letBind_10_, 0, _wBoolF_16_
 	la	$2, _false
 # was:	la	2, _false
-_wBoolF_12_:
+_wBoolF_16_:
 	jal	putstring
 # was:	jal	putstring, 2
 	ori	$2, $0, 1
@@ -161,6 +175,17 @@ _IllegalArrSizeError_:
 	ori	$2, $0, 4
 	syscall
 	j	_stop_
+_IllegalDivision_:
+	la	$4, _IllegalDivisionByZero_
+	ori	$2, $0, 4
+	syscall
+	ori	$4, $5, 0
+	ori	$2, $0, 1
+	syscall
+	la	$4, _cr_
+	ori	$2, $0, 4
+	syscall
+	j	_stop_
 	.data	
 _cr_:
 	.asciiz	"\n"
@@ -168,6 +193,8 @@ _space_:
 	.asciiz	" "
 _IllegalArrSizeString_:
 	.asciiz	"Error: Array size less or equal to 0 at line "
+_IllegalDivisionByZero_:
+	.asciiz	"Error: Can't divide by zero"
 # String Literals
 	.align	2
 _true:

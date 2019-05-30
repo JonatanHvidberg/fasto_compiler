@@ -66,6 +66,8 @@ main:
 # was:	ori	_divide_L_14_, 0, 3
 	ori	$11, $0, 2
 # was:	ori	_divide_R_15_, 0, 2
+	beq	$11, $0, _IllegalDivision_
+# was:	beq	_divide_R_15_, 0, _IllegalDivision_
 	div	$10, $10, $11
 # was:	div	_eq_L_12_, _divide_L_14_, _divide_R_15_
 	ori	$11, $0, 1
@@ -80,7 +82,7 @@ _false_17_:
 # 	ori	2,_arg_11_,0
 	jal	write_nl
 # was:	jal	write_nl, 2
-	ori	$16, $2, 0
+	ori	$17, $2, 0
 # was:	ori	_letBind_10_, 2, 0
 	ori	$10, $0, 3
 # was:	ori	_neg_25_, 0, 3
@@ -88,6 +90,8 @@ _false_17_:
 # was:	sub	_divide_L_22_, 0, _neg_25_
 	ori	$11, $0, 2
 # was:	ori	_divide_R_23_, 0, 2
+	beq	$11, $0, _IllegalDivision_
+# was:	beq	_divide_R_23_, 0, _IllegalDivision_
 	div	$10, $10, $11
 # was:	div	_eq_L_20_, _divide_L_22_, _divide_R_23_
 	ori	$11, $0, 2
@@ -104,7 +108,7 @@ _false_27_:
 # 	ori	2,_arg_19_,0
 	jal	write_nl
 # was:	jal	write_nl, 2
-	ori	$17, $2, 0
+	ori	$16, $2, 0
 # was:	ori	_letBind_18_, 2, 0
 	ori	$10, $0, 3
 # was:	ori	_divide_L_32_, 0, 3
@@ -112,6 +116,8 @@ _false_27_:
 # was:	ori	_neg_35_, 0, 2
 	sub	$11, $0, $11
 # was:	sub	_divide_R_33_, 0, _neg_35_
+	beq	$11, $0, _IllegalDivision_
+# was:	beq	_divide_R_33_, 0, _IllegalDivision_
 	div	$10, $10, $11
 # was:	div	_eq_L_30_, _divide_L_32_, _divide_R_33_
 	ori	$11, $0, 2
@@ -138,6 +144,8 @@ _false_37_:
 # was:	ori	_neg_46_, 0, 2
 	sub	$11, $0, $11
 # was:	sub	_divide_R_43_, 0, _neg_46_
+	beq	$11, $0, _IllegalDivision_
+# was:	beq	_divide_R_43_, 0, _IllegalDivision_
 	div	$10, $10, $11
 # was:	div	_eq_L_40_, _divide_L_42_, _divide_R_43_
 	ori	$11, $0, 1
@@ -154,15 +162,36 @@ _false_47_:
 # was:	jal	write_nl, 2
 # 	ori	_letBind_38_,2,0
 # 	ori	_and_L_49_,_letBind_10_,0
-# 	ori	_and_L_51_,_letBind_18_,0
-# 	ori	_and_L_53_,_letBind_28_,0
-# 	ori	_and_R_54_,_letBind_38_,0
+	bne	$17, $0, _trueLabel_51_
+# was:	bne	_and_L_49_, 0, _trueLabel_51_
+	add	$2, $17, $0
+# was:	add	_arg_48_, _and_L_49_, 0
+	j	_endLabel_52_
+_trueLabel_51_:
+# 	ori	_and_L_53_,_letBind_18_,0
+	bne	$16, $0, _trueLabel_55_
+# was:	bne	_and_L_53_, 0, _trueLabel_55_
+	add	$10, $16, $0
+# was:	add	_and_R_50_, _and_L_53_, 0
+	j	_endLabel_56_
+_trueLabel_55_:
+# 	ori	_and_L_57_,_letBind_28_,0
+	bne	$18, $0, _trueLabel_59_
+# was:	bne	_and_L_57_, 0, _trueLabel_59_
+	add	$10, $18, $0
+# was:	add	_and_R_54_, _and_L_57_, 0
+	j	_endLabel_60_
+_trueLabel_59_:
+# 	ori	_and_R_58_,_letBind_38_,0
 	and	$10, $18, $2
-# was:	and	_and_R_52_, _and_L_53_, _and_R_54_
-	and	$10, $17, $10
-# was:	and	_and_R_50_, _and_L_51_, _and_R_52_
-	and	$2, $16, $10
+# was:	and	_and_R_54_, _and_L_57_, _and_R_58_
+_endLabel_60_:
+	and	$10, $16, $10
+# was:	and	_and_R_50_, _and_L_53_, _and_R_54_
+_endLabel_56_:
+	and	$2, $17, $10
 # was:	and	_arg_48_, _and_L_49_, _and_R_50_
+_endLabel_52_:
 # 	ori	2,_arg_48_,0
 	jal	write_nl
 # was:	jal	write_nl, 2
@@ -261,6 +290,17 @@ _IllegalArrSizeError_:
 	ori	$2, $0, 4
 	syscall
 	j	_stop_
+_IllegalDivision_:
+	la	$4, _IllegalDivisionByZero_
+	ori	$2, $0, 4
+	syscall
+	ori	$4, $5, 0
+	ori	$2, $0, 1
+	syscall
+	la	$4, _cr_
+	ori	$2, $0, 4
+	syscall
+	j	_stop_
 	.data	
 _cr_:
 	.asciiz	"\n"
@@ -268,6 +308,8 @@ _space_:
 	.asciiz	" "
 _IllegalArrSizeString_:
 	.asciiz	"Error: Array size less or equal to 0 at line "
+_IllegalDivisionByZero_:
+	.asciiz	"Error: Can't divide by zero"
 # String Literals
 	.align	2
 _a__str__8_:

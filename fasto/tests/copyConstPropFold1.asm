@@ -66,6 +66,8 @@ _loop_end_9_:
 # 	ori	_divide_L_13_,_letBind_2_,0
 	ori	$11, $0, 10
 # was:	ori	_divide_R_14_, 0, 10
+	beq	$11, $0, _IllegalDivision_
+# was:	beq	_divide_R_14_, 0, _IllegalDivision_
 	div	$12, $12, $11
 # was:	div	_letBind_12_, _divide_L_13_, _divide_R_14_
 # 	ori	_arr_ind_17_,_letBind_12_,0
@@ -197,6 +199,17 @@ _IllegalArrSizeError_:
 	ori	$2, $0, 4
 	syscall
 	j	_stop_
+_IllegalDivision_:
+	la	$4, _IllegalDivisionByZero_
+	ori	$2, $0, 4
+	syscall
+	ori	$4, $5, 0
+	ori	$2, $0, 1
+	syscall
+	la	$4, _cr_
+	ori	$2, $0, 4
+	syscall
+	j	_stop_
 	.data	
 _cr_:
 	.asciiz	"\n"
@@ -204,6 +217,8 @@ _space_:
 	.asciiz	" "
 _IllegalArrSizeString_:
 	.asciiz	"Error: Array size less or equal to 0 at line "
+_IllegalDivisionByZero_:
+	.asciiz	"Error: Can't divide by zero"
 # String Literals
 	.align	2
 _true:

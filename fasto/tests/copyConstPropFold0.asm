@@ -163,6 +163,17 @@ _IllegalArrSizeError_:
 	ori	$2, $0, 4
 	syscall
 	j	_stop_
+_IllegalDivision_:
+	la	$4, _IllegalDivisionByZero_
+	ori	$2, $0, 4
+	syscall
+	ori	$4, $5, 0
+	ori	$2, $0, 1
+	syscall
+	la	$4, _cr_
+	ori	$2, $0, 4
+	syscall
+	j	_stop_
 	.data	
 _cr_:
 	.asciiz	"\n"
@@ -170,6 +181,8 @@ _space_:
 	.asciiz	" "
 _IllegalArrSizeString_:
 	.asciiz	"Error: Array size less or equal to 0 at line "
+_IllegalDivisionByZero_:
+	.asciiz	"Error: Can't divide by zero"
 # String Literals
 	.align	2
 _true:

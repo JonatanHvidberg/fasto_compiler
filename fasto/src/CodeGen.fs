@@ -259,8 +259,8 @@ let rec compileExp  (e      : TypedExp)
       let zeroLabel = newName "divide_0"
       let code1 = compileExp e1 vtable t1
       let code2 = compileExp e2 vtable t2
-      code1 @ code2 @  [Mips.DIV (place,t1,t2)]
-            //code1 @ code2 @ [Mips.BEQ (t2,"0",zeroLabel); Mips.DIV (place,t1,t2)]
+      //code1 @ code2 @  [Mips.DIV (place,t1,t2)]
+      code1 @ code2 @ [Mips.BEQ (t2,"0","_IllegalDivision_"); Mips.DIV (place,t1,t2)]
 
   | Not (e, pos) ->
       let t = newName "not"
@@ -434,18 +434,37 @@ let rec compileExp  (e      : TypedExp)
   | And (e1, e2, pos) ->
     let t1 = newName "and_L"
     let t2 = newName "and_R"
+    let trueLabel = newName "trueLabel"
+    let endLabel = newName "endLabel"
     let code1 = compileExp e1 vtable t1
     let code2 = compileExp e2 vtable t2
 
-    code1 @ code2 @ [Mips.AND (place,t1,t2)]
+    code1
+    @ [Mips.BNE (t1, "0",trueLabel)
+      ; Mips.ADD (place,t1,"0")
+      ; Mips.J (endLabel)
+      ; Mips.LABEL (trueLabel)]
+     @ code2
+     @ [Mips.AND (place,t1,t2)
+      ; Mips.LABEL (endLabel)]
 
   | Or (e1, e2, pos) ->
     let t1 = newName "or_L"
     let t2 = newName "or_R"
+    let falseLabel = newName "falseLabel"
+    let endLabel = newName "endLabel"
     let code1 = compileExp e1 vtable t1
     let code2 = compileExp e2 vtable t2
 
-    code1 @ code2 @ [Mips.OR (place,t1,t2)]
+    //code1 @ code2 @ [Mips.OR (place,t1,t2)]
+    code1
+    @ [Mips.BEQ (t1, "0",falseLabel)
+      ; Mips.ADD (place,t1,"0")
+      ; Mips.J (endLabel)
+      ; Mips.LABEL (falseLabel)]
+     @ code2
+     @ [Mips.OR (place,t1,t2)
+      ; Mips.LABEL (endLabel)]
 
   (* Indexing:
      1. generate code to compute the index
@@ -1101,6 +1120,15 @@ let compile (funs : TypedProg) : Mips.Instruction list =
        Mips.LA ("4","_cr_");
        Mips.LI ("2","4"); Mips.SYSCALL; (* print CR *)
        Mips.J "_stop_";
+      (*Fixed devide by Zero *)
+       Mips.LABEL "_IllegalDivision_";
+       Mips.LA ("4","_IllegalDivisionByZero_");
+       Mips.LI ("2","4"); Mips.SYSCALL; (* print string *)
+       Mips.MOVE ("4","5");
+       Mips.LI ("2","1"); Mips.SYSCALL; (* print line number *)
+       Mips.LA ("4","_cr_");
+       Mips.LI ("2","4"); Mips.SYSCALL; (* print CR *)
+       Mips.J "_stop_";
       (* Fixed data (for error message) *)
        Mips.DATA "";
        Mips.LABEL "_cr_";       (* carriage return string *)
@@ -1108,7 +1136,9 @@ let compile (funs : TypedProg) : Mips.Instruction list =
        Mips.LABEL "_space_";
        Mips.ASCIIZ " ";
        Mips.LABEL "_IllegalArrSizeString_";
-       Mips.ASCIIZ "Error: Array size less or equal to 0 at line "]
+       Mips.ASCIIZ "Error: Array size less or equal to 0 at line ";
+       Mips.LABEL "_IllegalDivisionByZero_";
+       Mips.ASCIIZ "Error: Can't divide by zero"]
       (* String literals *)
      @ (Mips.COMMENT "String Literals" ::
         List.concat stringdata)
